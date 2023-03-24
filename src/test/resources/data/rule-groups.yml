@@ -1,0 +1,11 @@
+- groupId: CLOUD_CACHE
+  groupName: Embedded Cache
+  groupDesc: A use of Embedded Cache is Problematic
+  severity: 3
+  category: Cloud
+
+- groupId: CLOUD_JCA
+  groupName: Java Cloud Architecture
+  groupDesc: Use of Java Cloud Architecture is Problematic
+  severity: 2
+  category: Cloud
