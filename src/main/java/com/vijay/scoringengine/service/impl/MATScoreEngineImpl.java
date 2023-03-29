@@ -82,6 +82,10 @@ public class MATScoreEngineImpl implements MATScoreEngine {
                     totalQuestions = totalQuestions + 1;
                 }
             }
+            //Calculates the raw percentage score, and then converts it to a percentage between 0 and 100 by multiplying by 100.
+            //The multiplication by 5 in the denominator of the expression (totalQuestions * 5) is necessary because each
+            // question is worth 5 points, and the total number of points possible is equal to the number of
+            // questions multiplied by 5.
             double percentageScore = (double)  surveyScore / (totalQuestions * 5) * 100;
             surveyScore = (int) Math.round(percentageScore / 100 * MATScoreEngine.TOTAL_SURVEY_SCORE);
             log.info("Survey score for workload : {} ==> {}", workloadID, surveyScore);
