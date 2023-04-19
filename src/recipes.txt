@@ -1,0 +1,93 @@
+<<SOAP Over JMS>>
+SOAP over JMS (Java Message Service) is a communication protocol that allows SOAP-based web services to be transmitted over JMS messaging infrastructure instead of the more common HTTP transport.
+For Liberty:
+Migrate your web services to use the JAX-WS (Java API for XML Web Services) standard and JMS components to use the JMS API.
+Update your server.xml file to include the necessary features, such as jaxws-2.3, jms-2.0, and the JMS provider-specific features.
+For Spring Boot:
+Migrate your web services to use Spring Web Services (Spring-WS) with SOAP over JMS support. Migrate your JMS components to use Spring JMS or Spring Integration.
+
+<<Websphere Startup Beans Service API>>
+WebSphere Startup Beans Service API is a proprietary feature provided by WebSphere Application Server traditional that allows you to configure and
+execute specific Java beans or Enterprise JavaBeans (EJBs) automatically during server startup.
+This feature enables you to perform initialization tasks, such as setting up resources, initializing databases, or starting background processes when your application starts.
+For Liberty:
+Use standard Java EE mechanisms, such as @Startup annotation with EJB singleton beans or javax.servlet.ServletContextListener, for executing code at startup.
+For Spring Boot:
+Use Spring-specific mechanisms, such as implementing the org.springframework.context.ApplicationListener interface, using @PostConstruct annotation,
+or defining a CommandLineRunner or ApplicationRunner bean for executing code at startup.
+
+<<Websphere SDO>>
+WebSphere Service Data Objects (SDO) API is a proprietary feature provided by WebSphere Application Server traditional that enables a unified data access model for heterogeneous data sources.
+SDO API facilitates data access and manipulation for XML documents, relational databases, and other data sources in a consistent manner.
+For Open Liberty:
+Use standard Java mechanisms, such as Java Persistence API (JPA) for relational databases, Java API for XML Processing (JAXP) or JAXB for XML documents, and other appropriate APIs for your specific data sources.
+For Spring Boot:
+Use Spring-specific mechanisms, such as Spring Data JPA for relational databases, Spring Data MongoDB for MongoDB data store, Spring Web Services (Spring-WS) for XML documents,
+
+<<Websphere Scheduler API>>
+WebSphere Scheduler API is a proprietary feature provided by WebSphere Application Server traditional that enables you to schedule, manage, and execute tasks at specific times or intervals.
+This API offers various scheduling options, such as fixed-rate, fixed-delay, and cron-like expressions, as well as the ability to persist scheduled tasks in a database.
+For Liberty:
+Use standard Java mechanisms, such as javax.enterprise.concurrent.ManagedScheduledExecutorService from the Java EE Concurrency Utilities API or the java.util.concurrent.ScheduledExecutorService
+from the Java SE Executor framework for task scheduling.
+For Spring Boot:
+Use Spring-specific mechanisms, such as the org.springframework.scheduling.TaskScheduler interface, the @Scheduled annotation, or the org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler class for task scheduling.
+Openshift Cron can also be used to replace scheduled tasks.
+If the tasks are persisted in DB, we may need a custom solution or Quartz
+
+
+<<Websphere Client API>>
+WebSphere Application Clients API is a proprietary feature provided by WebSphere Application Server traditional that allows you to create standalone Java applications,
+known as "application clients," which can access and interact with resources and services hosted on the WebSphere Application Server.
+These application clients use various communication protocols, such as RMI/IIOP, JMS, or Web Services, to interact with server-side components like EJBs or other server resources.
+
+Migrate the server side components as REST microservices, and  update the application clients to communicate to new microservices instead of using WebSphere Application Client API.
+
+<<Websphere Connector Architecture API>>
+WebSphere Connector Architecture API is an implementation of the Java EE Connector Architecture (JCA) specification provided by the WebSphere Application Server traditional.
+JCA is a standard for connecting Java EE applications to external systems, such as Enterprise Information Systems (EIS) like databases, messaging systems, or legacy applications.
+JCA defines a set of contracts and APIs for creating resource adapters, which act as intermediaries between Java EE applications and external systems.
+Migrate your resource adapters to alternative communication mechanisms.
+Depending on whether you are migrating to Open Liberty or Spring Boot, the process will differ:
+For Liberty:
+Use standard Java mechanisms, such as JDBC for relational databases, JMS for messaging systems, or other appropriate APIs for your specific external systems.
+For Spring Boot:
+Use Spring-specific mechanisms, such as Spring Data JPA for relational databases, Spring Data MongoDB for MongoDB data store, Spring Integration for messaging systems,
+or other appropriate Spring Data projects for your specific external systems.
+
+<<Websphere Enterprise Java Beans APIs and SPIs>>
+WebSphere Enterprise Java Beans (EJB) APIs and SPIs are provided by WebSphere Application Server traditional as an implementation of the Java EE EJB specification.
+EJBs are server-side components that encapsulate the business logic of an enterprise application. They can be Stateless, Stateful, or Singleton session beans, and Message-Driven beans.
+EJBs support various features, such as transactions, security, and concurrency control.
+
+For Liberty:
+Use Java EE technologies like CDI (Contexts and Dependency Injection) and JPA (Java Persistence API) to refactor your EJB components into POJOs (Plain Old Java Objects) that perform the same business logic.
+
+For Spring Boot:
+Use the Spring Framework to refactor your EJB components into POJOs (Plain Old Java Objects) that perform the same business logic.
+You can use Spring Beans, Spring Data, and other relevant Spring modules for this purpose.
+
+Please refer wiki to Migrate EJBs to Spring Beans
+
+<<Websphere Exception APIs and SPIs>>
+WebSphere Exception APIs and SPIs are provided by WebSphere Application Server traditional as an implementation of custom exception handling in Java EE applications.
+They define a set of exceptions and error handling mechanisms specific to the WebSphere environment.
+
+For Liberty:
+Use standard Java exception handling mechanisms to refactor your custom exceptions and error handling logic.
+Replace any WebSphere-specific exception classes with standard Java exceptions or create your own custom exception classes that extend standard Java exceptions.
+
+For Spring Boot:
+Use Spring Boot's exception handling features, such as @ExceptionHandler and @ControllerAdvice, to refactor your custom exceptions and error handling logic.
+
+<<Websphere Extention Registry APIs>>
+WebSphere Extension Registry APIs provide a mechanism for registering and discovering extensions in the WebSphere Application Server traditional.
+These APIs allow you to plug in custom implementations for various services and features provided by WebSphere.
+
+For Liberty:
+Use standard Java EE mechanisms like CDI (Contexts and Dependency Injection) or other appropriate technologies for implementing your custom extensions.
+Refactor your custom implementations to work with these mechanisms, and update your application configuration accordingly.
+
+For Spring Boot:
+Use the Spring Framework and its extension mechanisms, such as Spring Beans or custom auto-configuration, to implement your custom extensions.
+Refactor your custom implementations to work with these mechanisms, and update your application configuration accordingly.
