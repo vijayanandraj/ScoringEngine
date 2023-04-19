@@ -21,6 +21,22 @@ def create_project_mapping(solution_files):
             project_mapping[project_path] = (sln_path, project_file)
     return project_mapping
 
+def create_project_mapping_1(solution_files):
+    project_mapping = {}
+    for sln_path in solution_files:
+        solution = parse(sln_path)
+        for project_file in solution.project_files():
+            project_path = os.path.normpath(os.path.join(os.path.dirname(sln_path), project_file))
+            project_dir = os.path.dirname(project_path)
+
+            # Scan the project directory and its subdirectories for source files
+            for root, _, files in os.walk(project_dir):
+                for file in files:
+                    if file.endswith(('.cs', '.vb')):
+                        source_file_path = os.path.normpath(os.path.join(root, file))
+                        project_mapping[source_file_path] = (sln_path, project_file)
+    return project_mapping
+
 # Function to update the log CSV file with solution and project information
 def update_csv_log(input_csv, output_csv, project_mapping):
     with open(input_csv, 'r', newline='', encoding='utf-8') as input_file, \
