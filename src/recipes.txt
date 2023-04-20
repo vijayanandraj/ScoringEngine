@@ -91,3 +91,227 @@ Refactor your custom implementations to work with these mechanisms, and update y
 For Spring Boot:
 Use the Spring Framework and its extension mechanisms, such as Spring Beans or custom auto-configuration, to implement your custom extensions.
 Refactor your custom implementations to work with these mechanisms, and update your application configuration accordingly.
+
+<<WebSphere logging and RAS>> 3
+WebSphere logging and RAS (Reliability, Availability, and Serviceability) APIs and SPIs are used in WebSphere Application Server traditional to interact with the logging and tracing infrastructure.
+They enable developers to create custom loggers and trace components, as well as configure and manage the logging system
+
+For Open Liberty:
+Use the standard Java logging API (java.util.logging) or a third-party logging framework like Log4j or SLF4J.
+Update your application code to use these mechanisms and configure the logging system in the server.xml file.
+
+For Spring Boot:
+Use the default Spring Boot logging system based on Logback or a third-party logging framework like Log4j or java.util.logging.
+Update your application code to use these mechanisms and configure the logging system in the application.properties or application.yml file.
+
+Ensure the logging is redirected to STDOUT or Console.
+
+<<WebSphere ORB (Object Request Broker) Extensions APIs>> 1
+WebSphere ORB (Object Request Broker) Extensions APIs are used in WebSphere Application Server traditional for working with CORBA (Common Object Request Broker Architecture) and IIOP (Internet Inter-Orb Protocol).
+They enable developers to build distributed applications with interoperability between different programming languages and platforms.
+
+<<Websphere Service Integration Bus API>> 2
+WebSphere Service Integration Bus (SIB) is a messaging system provided by WebSphere Application Server traditional (WAS).
+It enables asynchronous communication between applications and components using message-driven beans (MDBs), JMS, and other messaging APIs.
+SIB provides features like message routing, delivery, and message persistence.
+
+Refactor your application to use the chosen messaging system instead of SIB. This may involve changes to your message-driven beans, JMS clients, and other messaging components.
+Update your application configuration to connect to the new messaging system.
+For Open Liberty: Use the Java EE or Jakarta EE messaging APIs with the chosen messaging system, and configure the necessary
+resources in your server.xml file.
+For Spring Boot: Use Spring JMS or a messaging system-specific API (e.g., Kafka APIs, RabbitMQ APIs), and configure the necessary
+resources using Spring's Java or XML configuration.
+
+<<WebSphere SMF (System Management Facilities) Recording APIs>> 1
+WebSphere SMF (System Management Facilities) Recording APIs are used to collect and record performance data for applications running on IBM WebSphere Application Server traditional (WAS) on z/OS.
+SMF is a z/OS subsystem that provides a standardized way to collect and store performance and utilization data for various components of the operating system and applications.
+
+
+Refactor your workload to use the Dyntrace instead of WebSphere SMF Recording APIs.
+This may involve adding monitoring libraries, annotations, or configuration settings to your application code and configuration files.
+
+
+<<Tivoli Performance Viewer (TPV) SPIs>> 1
+Tivoli Performance Viewer (TPV) is a performance monitoring tool provided by IBM WebSphere Application Server traditional (WAS) that allows you to collect,
+view, and analyze performance data for your applications. TPV Service Provider Interfaces (SPIs) enable you to customize and extend the functionality of
+TPV by implementing your own performance monitoring components.
+
+Refactor your workload to use the Dyntrace instead of WebSphere SMF Recording APIs.
+This may involve adding monitoring libraries, annotations, or configuration settings to your application code and configuration files
+
+<<WebSphere Extension Helper SPIs>> 1
+WebSphere Extension Helper SPIs (Service Provider Interfaces) are used in IBM WebSphere Application Server traditional (WAS)
+to extend the functionality of the server by providing custom implementations for various services.  These SPIs allow developers to create
+custom extensions to WebSphere and interact with various server components.
+
+Analyse If the custom implementations has any specific value try to bring the logic to Application code Using Liberty/Spring Boot.
+
+<<WebSphere UDDI (Universal Description, Discovery, and Integration) APIs>> 2
+WebSphere UDDI (Universal Description, Discovery, and Integration) APIs are used in IBM WebSphere Application Server traditional (WAS)
+for discovering and interacting with web services in a standardized way.  UDDI is a registry where web services can be published, and
+clients can discover and bind to those services.
+
+Choose alternative service discovery mechanisms and APIs. If the APIs are rewritten to REST APIS, then no need for UDDI replacements.
+If for some reason WebServices are retained as-is then a Service Registry like Eureka can help.
+
+<<WebSphere Workload Manager (WLM) APIs >> 4
+WebSphere Workload Manager (WLM) APIs are used in IBM WebSphere Application Server traditional (WAS) to distribute and manage workloads across multiple server instances,
+clusters, or cells. It helps balance the workload and ensures optimal performance and high availability for applications.
+
+Migrating to OpenShift/K8S automatically mitigates this issue via Auto Scaling.
+
+
+<<WebSphere Studio Application Developer Integration Edition APIs>> 4
+
+WebSphere Studio Application Developer Integration Edition (WSADIE) APIs were used for the development and integration of applications,
+web services, and other components in IBM WebSphere Application Server traditional (WAS) using the WebSphere Studio Application Developer Integration Edition.
+This IDE was a part of the IBM Rational Software suite.
+
+As WSADIE is an older development environment, it is not recommended to continue using it when migrating from WebSphere traditional to Open Liberty,
+Spring Boot, or a microservices architecture deployed in OpenShift.
+
+Migrate to Eclipse
+
+<<WebSphere Performance Monitoring Infrastructure (PMI)>> 2
+WebSphere Performance Monitoring Infrastructure (PMI) APIs are used to monitor and manage the performance of applications,
+components, and resources in IBM WebSphere Application Server traditional (WAS). PMI provides a set of counters and statistics
+that can help you identify performance bottlenecks, optimize your applications, and ensure high availability.
+
+Migrate Workload to Dynatrace, approved PMI tool for Horizon Openshift
+
+<<WebSphere Portal APIs>>1
+WebSphere Portal APIs are used for developing, deploying, and managing applications in IBM WebSphere Portal,
+which is an enterprise portal solution that provides a framework for integrating applications, content, and services into a unified web-based user experience.
+
+Migrate your application components and content:
+
+Refactor your application to use the chosen web application and content management solutions instead of WebSphere Portal APIs.
+This may involve updating your application code, configuration files, and content to ensure compatibility with Open Liberty, Spring Boot, or OpenShift.
+
+For Open Liberty: Use Java EE, Jakarta EE, or MicroProfile technologies to develop your web applications, and integrate with
+frontend libraries and frameworks like React, Angular, or Vue.js as needed.
+For Spring Boot: Use Spring MVC, Spring WebFlux, or Spring RESTful web services to develop your web applications, and integrate with
+frontend libraries and frameworks like React, Angular, or Vue.js as needed.
+
+Content can moved to dedicates CMS/Static Site Generators
+
+
+<<WSSecurityHelper>> 2
+The WSSecurityHelper class is a part of the IBM WebSphere Application Server (WAS) traditional proprietary API,
+which is used for working with WS-Security features, such as signing and encrypting SOAP messages, token handling, and configuring security policies.
+When migrating from WebSphere traditional to Open Liberty, Spring Boot, or a microservices architecture deployed in OpenShift,
+you will need to remediate the use of WSSecurityHelper and other WAS-specific security APIs.
+
+Migrate to alternate Security mechanisms
+For Open Liberty: Use the Jakarta XML Web Services (JAX-WS) and Jakarta RESTful Web Services (JAX-RS) security features, such as WS-Security, WS-SecurityPolicy, and WS-Trust.
+You can also use the MicroProfile JWT Propagation specification for securing microservices.
+For Spring Boot: Use Spring Security, which provides extensive security features for web applications, including authentication, authorization,
+OAuth2, JWT, and more. Spring Security can be used in conjunction with Spring Web Services or Spring Boot RESTful web services for securing SOAP and REST services.
+
+<<WebSphere Resource Adapter APIs >>2
+WebSphere Resource Adapter APIs are used for developing, deploying, and managing Java Connector Architecture (JCA) resource
+adapters in IBM WebSphere Application Server traditional (WAS).  Resource adapters provide a standardized way for Java EE applications
+to interact with external systems like databases, messaging systems, and other Enterprise Information Systems (EIS).
+
+Choose alternative integration solutions:
+Select integration solutions that are suitable for your target environment (Open Liberty, Spring Boot, or OpenShift).
+These solutions may include platform-specific resource adapters, JCA resource adapters provided by external systems,
+or other integration technologies like RESTful web services, messaging systems, or custom APIs.
+
+<<WebSphere Remote Request Dispatcher APIs>>1
+WebSphere Remote Request Dispatcher APIs are specific to IBM WebSphere Application Server traditional (WAS) and are used
+for dispatching and executing remote requests in a WebSphere environment.
+
+Choose alternative remote request solutions:
+Select remote request solutions that are suitable for your target environment (Open Liberty, Spring Boot, or OpenShift).
+These solutions may include RESTful web services or messaging systems.
+
+<<WebSphere Optimized Local Adapters (OLA)>> 2
+WebSphere Optimized Local Adapters (OLA) APIs are part of the IBM WebSphere Application Server traditional (WAS) and are
+used for optimizing communication between local Enterprise JavaBeans (EJBs) and their clients within the same JVM, providing
+a more efficient communication mechanism than remote method invocations.
+
+Refactor EJBs to Restful APIs
+
+<<WebSphere Work Area APIs>2
+WebSphere Work Area APIs are specific to IBM WebSphere Application Server traditional (WAS) and are used for sharing
+contextual information across multiple components in a single application or across multiple applications in a distributed environment.
+
+Migrate your application components and configurations:
+Refactor your application to use the chosen context-sharing solutions instead of WebSphere Work Area APIs.
+This may involve updating your application code, configuration files, and setting up the required infrastructure components.
+
+For Open Liberty: Consider using CDI (Contexts and Dependency Injection) with request or session-scoped beans for sharing context within a single application.
+For distributed environments, you may use Jakarta RESTful Web Services (JAX-RS) or MicroProfile APIs for communication and context sharing.
+For Spring Boot: Use Spring's built-in context-sharing mechanisms, such as request or session-scoped beans, or leverage Spring Cloud for sharing context across microservices.
+Spring Cloud provides various distributed configuration and caching solutions, such as Spring Cloud Config Server and Spring Cloud Netflix components (e.g., Eureka, Ribbon).
+
+<<Web Services Notification (WS-Notification)>>2
+Web Services Notification (WS-Notification) is a family of specifications that define a standard way for web services to disseminate event notifications and updates to interested parties.
+It is often used in combination with other web service specifications like WS-Eventing, WS-BaseNotification, and WS-BrokeredNotification
+
+Migrate your application components and configurations:
+Refactor your application to use the chosen event-driven solutions instead of WS-Notification.
+This may involve updating your application code, configuration files, and setting up the required infrastructure components.
+
+For Open Liberty: Consider using Jakarta Messaging (JMS), MicroProfile Reactive Messaging, or other messaging solutions that are supported in Open Liberty.
+Integrate your application with messaging systems like Kafka or RabbitMQ as needed.
+For Spring Boot: Use Spring Boot's extensive support for messaging systems, such as Spring Kafka, Spring RabbitMQ, or Spring Cloud Stream.
+You can also use Spring WebFlux to create reactive, event-driven applications.
+
+<<Web services XPath, XSLT, and XQuery APIs>>3
+Web services XPath, XSLT, and XQuery APIs are used for querying and transforming XML data. XPath is a language used for
+selecting nodes from XML documents, XSLT is used for transforming XML documents into other formats, and XQuery is a query language for XML data.
+
+Open Liberty: Open Liberty supports standard Java APIs for XPath, XSLT, and XQuery, such as javax.xml.xpath, javax.xml.transform, and javax.xml.xquery.
+You can continue to use these APIs in your Open Liberty applications without any changes.
+Spring Boot: Spring Boot applications also support standard Java APIs for XPath, XSLT, and XQuery.
+You can use these APIs in your Spring Boot applications without any changes.
+
+<<WebSphere Web Services APIs and SPIs>>2
+WebSphere Web Services APIs and SPIs are specific to IBM WebSphere Application Server traditional (WAS) and are used for developing,
+deploying, and managing SOAP and RESTful web services.
+
+Refactor your application to use the chosen web services solutions instead of WebSphere Web Services APIs and SPIs.
+This may involve updating your application code, configuration files, and setting up the required infrastructure components.
+For Open Liberty: Consider using Jakarta EE web services APIs, such as JAX-WS for SOAP web services or JAX-RS for RESTful web services.
+Open Liberty has built-in support for these APIs.
+For Spring Boot: Use Spring's built-in support for web services, such as Spring Web Services for SOAP web services or Spring MVC/REST for RESTful web services.
+Spring Boot provides starter projects for easy integration and configuration of these web services.
+
+<<WSDL2Java>>2
+WSDL2Java is a tool  for generating Java code (client stubs, server-side skeletons, and data types) from a WSDL (Web Services Description Language) document.
+This tool facilitates the development of SOAP web services and clients. Its Generates JAX-RPC specific class which is deprecated.
+
+For Open Liberty: Consider using JAX-WS RI's wsimport tool, which are compatible with Open Liberty's support for JAX-WS.
+For Spring Boot: You can use  JAX-WS RI's wsimport tool.
+
+<<Java EE Application Deployment API>>3
+The Java EE Application Deployment API is a set of APIs and SPIs that allow developers to deploy, configure, and manage
+Java EE applications in a standardized manner.
+
+Horizon CI/CD should take care of this
+
+<<Java Portlet API>>2
+The Java Portlet API is a set of APIs and specifications for developing portlets, which are web components designed to be
+aggregated and displayed in a portal environment
+
+<<Java APIs for XML Registries (JAXR)>>2
+Java APIs for XML Registries (JAXR) is a Java API that provides a standard way to access various types of XML registries,
+such as Universal Description, Discovery, and Integration (UDDI) or ebXML registries.
+
+NA
+
+<<OSGi Remote Bundle Repository (RBR) Service API>>1
+OSGi Remote Bundle Repository (RBR) Service API provides a standard interface to manage the discovery, retrieval, and
+provisioning of OSGi bundles in remote repositories. In the context of WebSphere Application Server traditional (WAS),
+this API may have been used to access and manage remote OSGi bundles.
+
+NA
+
+<<OSGi Remote Admin Service API>>1
+OSGi Remote Admin Service API is a part of OSGi Remote Services specification, which provides a standard way to expose
+nd consume OSGi services across different JVMs, networks, or devices.
+
+NA
+
