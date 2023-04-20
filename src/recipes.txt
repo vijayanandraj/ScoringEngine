@@ -315,3 +315,28 @@ nd consume OSGi services across different JVMs, networks, or devices.
 
 NA
 
+<<WebSphere Integrated Solutions Console (ISC) APIs>>1
+WebSphere Integrated Solutions Console (ISC) APIs are used to develop custom management extensions for the WebSphere Application Server (WAS)
+traditional administration console. These custom extensions may provide additional functionality, such as monitoring or management of custom
+components in your application.
+
+Choose alternative solutions for custom management extensions:
+Select suitable alternatives for implementing custom management extensions in your target environment (Open Liberty, Spring Boot, or OpenShift).
+These alternatives may include custom RESTful APIs, custom management dashboards, or integration with existing management tools like Prometheus, Dynatrace, or Splunk.
+
+<<Websphere Crypto and Security APIs>>
+The com.ibm.websphere.crypto and com.ibm.websphere.security packages provide APIs for managing security and cryptographic
+operations within the WebSphere Application Server (WAS) traditional environment. These APIs might be used for tasks such as
+encryption, decryption, hashing, authentication, and authorization.
+
+Select suitable alternatives for implementing security and cryptographic operations in your target environment (Open Liberty, Spring Boot, or OpenShift).
+These alternatives may include Java Cryptography Extension (JCE), Java Cryptography Architecture (JCA), Spring Security, or other libraries and frameworks.
+
+Refactor your application to use the chosen alternatives instead of WebSphere Security and Crypto APIs.
+This may involve updating your application code, configuration files, and setting up the required infrastructure components.
+For Open Liberty: Open Liberty provides its own security APIs and supports Java EE security features. You can use these APIs,
+or choose to use other libraries and frameworks like JCE, JCA, or Spring Security.
+For Spring Boot: Spring Boot supports Spring Security, a powerful and flexible security framework.
+You can use Spring Security for authentication, authorization, encryption, and other security-related tasks.
+Additionally, you can use JCE, JCA, or other libraries for cryptographic operations.
+
