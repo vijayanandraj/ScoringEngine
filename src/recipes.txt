@@ -340,3 +340,23 @@ For Spring Boot: Spring Boot supports Spring Security, a powerful and flexible s
 You can use Spring Security for authentication, authorization, encryption, and other security-related tasks.
 Additionally, you can use JCE, JCA, or other libraries for cryptographic operations.
 
+<<com.ibm.websphere.ActivitySession>>
+com.ibm.websphere.ActivitySession is a WebSphere-specific API used to manage long-running, multi-request activities with transactional characteristics. It provides a way to group multiple transactions into a single unit of work that can be either committed or rolled back as a whole.
+
+Migrate your workload components and configurations:
+Refactor your application to use the chosen alternatives instead of ActivitySession. This may involve updating your application code, configuration files, and setting up the required infrastructure components.
+For Open Liberty: Open Liberty provides support for JTA, which can be used for managing transactions across multiple resources. You can use JTA as an alternative to ActivitySession.
+For Spring Boot: Spring Boot supports Spring's transaction management, which allows you to manage transactions in a declarative manner using annotations or XML configuration. You can use Spring's transaction management as an alternative to ActivitySession.
+
+For microservices architecture, implement saga pattern. The Saga pattern is a distributed transaction management approach used in microservices architectures to maintain data consistency across multiple services, relying on a series of local transactions and compensating transactions in case of failure, rather than traditional atomic transactions.
+
+<<com.ibm.websphere.appprofile>>
+The com.ibm.websphere.appprofile package in WebSphere Application Server is used for managing application profiles. Application profiles allow you to define and manage the configuration settings and resources for your applications.
+
+When deploying your workload in OpenShift, you can use ConfigMaps + Hashicorp Vault to manage configurations and sensitive data separately from your application. You can then inject these configurations into your application as environment variables or files, allowing you to keep your application configuration consistent across different environments.
+
+<<WebSphere Batch APIs and SPIs>>
+WebSphere Batch APIs and SPIs are used to create, manage, and execute batch jobs within the WebSphere Application Server environment. Batch jobs are typically long-running tasks that can be executed in the background, often for tasks like data processing or report generation.
+
+When deploying your batch jobs in a containerized environment like OpenShift, you can use Kubernetes Jobs and CronJobs resources to manage and schedule batch jobs. Jobs are one-time executions of a task, while CronJobs allow you to schedule recurring jobs. By using Kubernetes Jobs and CronJobs, you can take advantage of the built-in features of the platform, such as auto-scaling, self-healing, and rolling updates.
+
