@@ -55,6 +55,22 @@ def update_csv_log(input_csv, output_csv, project_mapping):
             project_info = project_mapping.get(fullpath, ('Unknown', 'Unknown'))
             writer.writerow([row[0]] + list(project_info) + row[1:])
 
+def add_orphaned_projects_to_mapping(root_directory, project_mapping):
+    for root, _, files in os.walk(root_directory):
+        for file in files:
+            if file.endswith(('.csproj', '.vbproj')):
+                project_path = os.path.normpath(os.path.join(root, file))
+                project_dir = os.path.dirname(project_path)
+
+                # Check if the project file is already in the mapping
+                if project_path not in project_mapping.values():
+                    for src_root, _, src_files in os.walk(project_dir):
+                        for src_file in src_files:
+                            if src_file.endswith(('.cs', '.vb')):
+                                src_file_path = os.path.normpath(os.path.join(src_root, src_file))
+                                project_mapping[src_file_path] = ('Unknown', project_path)
+
+
 # Main script
 input_csv = 'log_statements.csv'
 output_csv = 'log_statements_updated.csv'
