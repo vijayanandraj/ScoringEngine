@@ -70,6 +70,22 @@ def add_orphaned_projects_to_mapping(root_directory, project_mapping):
                                 src_file_path = os.path.normpath(os.path.join(src_root, src_file))
                                 project_mapping[src_file_path] = ('Unknown', project_path)
 
+def add_orphaned_projects_to_mapping_1(root_directory, project_mapping):
+    # Extract only project filenames from project_mapping
+    project_files = {os.path.split(proj_path)[1] for sln_path, proj_path in project_mapping.values()}
+
+    for root, _, files in os.walk(root_directory):
+        for file in files:
+            if file.endswith(('.csproj', '.vbproj')) and file not in project_files:
+                project_path = os.path.normpath(os.path.join(root, file))
+                project_dir = os.path.dirname(project_path)
+
+                for src_root, _, src_files in os.walk(project_dir):
+                    for src_file in src_files:
+                        if src_file.endswith(('.cs', '.vb')):
+                            src_file_path = os.path.normpath(os.path.join(src_root, src_file))
+                            project_mapping[src_file_path] = ('Unknown', project_path)
+
 
 # Main script
 input_csv = 'log_statements.csv'
@@ -78,4 +94,5 @@ root_folder = 'C:/Temp/BankProj'
 
 solution_files = find_solution_files(root_folder)
 project_mapping = create_project_mapping(solution_files)
+add_orphaned_projects_to_mapping(root_folder, project_mapping)
 update_csv_log(input_csv, output_csv, project_mapping)
