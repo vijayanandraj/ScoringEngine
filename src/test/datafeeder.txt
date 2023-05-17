@@ -1,0 +1,38 @@
+import pandas as pd
+import mysql.connector
+
+# Load the CSV file into a pandas DataFrame
+df = pd.read_csv('your_file.csv')
+
+# Select the columns you want. For example, 'column1', 'column2'
+df = df[['column1', 'column2']]
+
+# Define the MariaDB connection parameters
+config = {
+  'user': 'username',
+  'password': 'password',
+  'host': 'localhost',
+  'database': 'database_name',
+  'raise_on_warnings': True
+}
+
+# Create a new MySQL connection
+cnx = mysql.connector.connect(**config)
+
+# Create a new cursor
+cursor = cnx.cursor()
+
+# Create the INSERT INTO sql query
+query = '''INSERT INTO table_name(column1, column2) VALUES (%s, %s)'''
+
+# Insert DataFrame to Table
+for row in df.itertuples(index=False):
+    cursor.execute(query, tuple(row))
+
+# Commit the transaction
+cnx.commit()
+
+# Close the cursor and connection
+cursor.close()
+cnx.close()
+
