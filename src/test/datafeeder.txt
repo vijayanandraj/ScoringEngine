@@ -1,5 +1,21 @@
 import pandas as pd
 import mysql.connector
+from mysql.connector import Error
+
+def create_db_connection(host_name, user_name, user_password, db_name):
+    connection = None
+    try:
+        connection = mysql.connector.connect(
+            host=host_name,
+            user=user_name,
+            passwd=user_password,
+            database=db_name
+        )
+        print("MySQL Database connection successful")
+    except Error as err:
+        print(f"Error: '{err}'")
+
+    return connection
 
 # Load the CSV file into a pandas DataFrame
 df = pd.read_csv('your_file.csv')
@@ -7,32 +23,23 @@ df = pd.read_csv('your_file.csv')
 # Select the columns you want. For example, 'column1', 'column2'
 df = df[['column1', 'column2']]
 
-# Define the MariaDB connection parameters
-config = {
-  'user': 'username',
-  'password': 'password',
-  'host': 'localhost',
-  'database': 'database_name',
-  'raise_on_warnings': True
-}
-
 # Create a new MySQL connection
-cnx = mysql.connector.connect(**config)
+cnx = create_db_connection('localhost', 'username', 'password', 'database_name')
 
-# Create a new cursor
-cursor = cnx.cursor()
+if cnx is not None:
+    # Create a new cursor
+    cursor = cnx.cursor()
 
-# Create the INSERT INTO sql query
-query = '''INSERT INTO table_name(column1, column2) VALUES (%s, %s)'''
+    # Create the INSERT INTO sql query
+    query = '''INSERT INTO table_name(column1, column2) VALUES (%s, %s)'''
 
-# Insert DataFrame to Table
-for row in df.itertuples(index=False):
-    cursor.execute(query, tuple(row))
+    # Insert DataFrame to Table in chunks
+    chunksize = 1000
+    for i in range(0, len(df), chunksize):
+        data_tuples = list(df[i:i+chunksize].itertuples(index=False, name=None))
+        cursor.executemany(query, data_tuples)
+        cnx.commit()
 
-# Commit the transaction
-cnx.commit()
-
-# Close the cursor and connection
-cursor.close()
-cnx.close()
-
+    # Close the cursor and connection
+    cursor.close()
+    cnx.close()
