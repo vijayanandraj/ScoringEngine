@@ -212,3 +212,29 @@ def find_common_path(path1, path2):
     root_path_linux =  path2[:start_idx2 - 1]
 
     return common_path_str, root_path_win, root_path_linux
+
+import os
+import pandas as pd
+
+def find_common_root(paths):
+    # Normalize paths (ensure all separators are '/')
+    paths = [path.replace("\\", "/") for path in paths]
+
+    # Find common prefix
+    common_prefix = os.path.commonprefix(paths)
+
+    # Ensure common prefix is a valid path (ends at a directory boundary)
+    common_root = os.path.dirname(common_prefix)
+
+    return common_root
+
+# Read CSV file into a DataFrame
+df = pd.read_csv("your_file.csv")  # replace with your file name
+
+# Assume the column containing file paths is named "FilePath"
+# Replace with the actual column name in your CSV file
+file_paths = df["FilePath"]
+
+# Find common root
+common_root = find_common_root(file_paths)
+print(f"Common root: {common_root}")
