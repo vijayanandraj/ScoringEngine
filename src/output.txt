@@ -238,3 +238,35 @@ file_paths = df["FilePath"]
 # Find common root
 common_root = find_common_root(file_paths)
 print(f"Common root: {common_root}")
+
+import xml.etree.ElementTree as ET
+
+def parse_csproj(file_path):
+    try:
+        tree = ET.parse(file_path)
+        root = tree.getroot()
+
+        # Find default namespace
+        default_namespace = root.tag.split('}')[0].strip('{')
+
+        if default_namespace:
+            # If there's a default namespace (like in .NET Framework), we use it in our search
+            namespaces = {'ms': default_namespace}
+            assembly_name_element = root.find('.//ms:AssemblyName', namespaces)
+        else:
+            # If there's no default namespace (like in .NET Core or .NET 5+), we don't use namespaces in our search
+            assembly_name_element = root.find('.//AssemblyName')
+
+        if assembly_name_element is not None:
+            return assembly_name_element.text
+        else:
+            return "AssemblyName tag not found in the csproj file."
+    except ET.ParseError:
+        return "Error while parsing the csproj file."
+    except FileNotFoundError:
+        return "The specified csproj file does not exist."
+
+# Specify your .csproj file path
+file_path = 'path_to_your_csproj_file'
+
+print(parse_csproj(file_path))
