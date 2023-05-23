@@ -181,6 +181,7 @@ public class AccountController {
 ###8. Test the application: Test your application to ensure that the migrated Spring Bean is working as expected, and transactions are being managed correctly. You may want to use tools like Postman to test the RESTful endpoints.
 
 These steps provide a detailed guide for migrating a Stateless EJB 2.1 using Container-Managed Transactions to a Spring Bean based on Spring Boot.
+9
 
 def find_common_path(path1, path2):
     # Normalize paths (ensure all separators are '/')
