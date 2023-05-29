@@ -4,3 +4,8 @@ ZeroTouch Replatform minimizes the need for manual intervention, making the tran
 
 Modernization Council: A team of architects directing the transition of legacy applications to cloud-native architecture.
 The Council conducts in-depth analysis, provides strategic solutions, and ensures successful replatforming, serving as key advisors in the modernization journey.
+
+Modernization Index: A numerical score, ranging from 1 to 100, representing the readiness of an application for transition to a cloud-native architecture.
+The index is determined by assessing factors such as technical debt, cloud-native compliance, scalability, resilience, security, regulatory compliance,
+integration complexity, performance requirements, business continuity needs, data migration challenges, and organizational readiness.
+A higher score indicates a greater readiness for modernization and a more cloud-ready state of the application.
