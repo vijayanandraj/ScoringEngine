@@ -1,0 +1,6 @@
+ZeroTouch Replatform: A software tool designed to automate the process of replatforming existing applications to a cloud-native architecture.
+By analyzing an existing codebase, generating necessary boilerplate code, externalizing configurations, and modifying build pipelines,
+ZeroTouch Replatform minimizes the need for manual intervention, making the transition to the cloud as seamless as possible.
+
+Modernization Council: A team of architects directing the transition of legacy applications to cloud-native architecture.
+The Council conducts in-depth analysis, provides strategic solutions, and ensures successful replatforming, serving as key advisors in the modernization journey.
