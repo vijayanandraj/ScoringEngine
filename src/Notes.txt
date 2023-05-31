@@ -8,4 +8,23 @@ The Council conducts in-depth analysis, provides strategic solutions, and ensure
 Modernization Index: A numerical score, ranging from 1 to 100, representing the readiness of an application for transition to a cloud-native architecture.
 The index is determined by assessing factors such as technical debt, cloud-native compliance, scalability, resilience, security, regulatory compliance,
 integration complexity, performance requirements, business continuity needs, data migration challenges, and organizational readiness.
-A higher score indicates a greater readiness for modernization and a more cloud-ready state of the application.
+A higher score indicates a greater readiness for modernization and a more clsoud-ready state of the application.
+
+import pandas as pd
+from sqlalchemy import create_engine
+
+# Establish connections to MariaDB and SQL Server
+mariadb_engine = create_engine('mysql+pymysql://user:password@localhost/dbname')
+sqlserver_engine = create_engine('mssql+pyodbc://user:password@localhost/dbname')
+
+# Number of rows to read at a time
+chunksize = 1000  # Reduce chunk size if dealing with large BLOBs
+
+# Query to select all data from the table in MariaDB
+query = 'SELECT * FROM tablename'
+
+# Read data from MariaDB and write it to SQL Server in chunks
+for chunk in pd.read_sql_query(query, mariadb_engine, chunksize=chunksize):
+    # Convert BLOB columns to the correct data type, if necessary
+    # chunk['blob_column'] = chunk['blob_column'].apply(lambda x: x.decode('utf-8'))
+    chunk.to_sql('tablename', sqlserver_engine, if_exists='append', index=False)
