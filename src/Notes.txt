@@ -28,3 +28,36 @@ for chunk in pd.read_sql_query(query, mariadb_engine, chunksize=chunksize):
     # Convert BLOB columns to the correct data type, if necessary
     # chunk['blob_column'] = chunk['blob_column'].apply(lambda x: x.decode('utf-8'))
     chunk.to_sql('tablename', sqlserver_engine, if_exists='append', index=False)
+
+
+
+import pandas as pd
+from sqlalchemy import create_engine, text
+from concurrent.futures import ThreadPoolExecutor
+
+# Establish connections to MariaDB and SQL Server
+mariadb_engine = create_engine('mysql+pymysql://user:password@localhost/dbname')
+sqlserver_engine = create_engine('mssql+pyodbc://user:password@localhost/dbname')
+
+# Number of rows to read at a time
+chunksize = 1000  # Reduce chunk size if dealing with large BLOBs
+
+# Number of threads to use for the data migration
+num_threads = 4
+
+# Query to select all data from the table in MariaDB
+query = 'SELECT * FROM tablename'
+
+def process_chunk(chunk):
+    # Convert BLOB columns to the correct data type, if necessary
+    # chunk['blob_column'] = chunk['blob_column'].apply(lambda x: x.decode('utf-8'))
+
+    with sqlserver_engine.connect() as connection:
+        connection.execute(text('SET IDENTITY_INSERT YourTableName ON'))
+        chunk.to_sql('tablename', connection, if_exists='append', index=False)
+        connection.execute(text('SET IDENTITY_INSERT YourTableName OFF'))
+
+# Read data from MariaDB and write it to SQL Server in chunks
+with ThreadPoolExecutor(max_workers=num_threads) as executor:
+    chunks = pd.read_sql_query(query, mariadb_engine, chunksize=chunksize)
+    executor.map(process_chunk, chunks)
