@@ -38,3 +38,6 @@ with open("output.json", "w") as output_file:
 json.dump(result_dict, output_file, indent=4)
 
 Pattern namePattern = Pattern.compile("(.+?)(-\\d+.*|_\\d+.*|\\.\\d+.*)(\\.ear|\\.war|\\.jar|\\.zip)");
+
+
+Pattern namePattern = Pattern.compile("(.+?)(?:-\\d+.*|_\\d+.*|\\.\\d+.*?)?(\\.ear|\\.war|\\.jar|\\.zip)");
