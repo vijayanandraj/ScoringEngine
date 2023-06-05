@@ -41,3 +41,83 @@ Pattern namePattern = Pattern.compile("(.+?)(-\\d+.*|_\\d+.*|\\.\\d+.*)(\\.ear|\
 
 
 Pattern namePattern = Pattern.compile("(.+?)(?:-\\d+.*|_\\d+.*|\\.\\d+.*?)?(\\.ear|\\.war|\\.jar|\\.zip)");
+
+Migration Script
+
+import glob
+import pymssql
+import logging
+
+# Set up logging
+logging.basicConfig(filename='migration.log', level=logging.INFO, format='%(asctime)s:%(levelname)s:%(message)s')
+
+# Establish a connection to your SQL Server database
+conn = pymssql.connect(server='your_server', user='your_user', password='your_password', database='your_database')
+
+# Get a cursor from the connection
+cursor = conn.cursor()
+
+# Get a list of all .sql files in the current directory
+sql_files = sorted(glob.glob('*.sql'))
+
+# Execute each .sql file in order
+for sql_file in sql_files:
+    with open(sql_file, 'r') as f:
+        sql_script = f.read()
+
+        try:
+            cursor.execute('BEGIN TRANSACTION;')
+            cursor.execute(sql_script)
+            cursor.execute('COMMIT;')
+            logging.info(f'Successfully executed {sql_file}')
+        except Exception as e:
+            cursor.execute('ROLLBACK;')
+            logging.error(f'Error executing {sql_file}: {e}')
+
+# Close the connection
+conn.close()
+
+Migration Verification Script
+
+import pymssql
+import mysql.connector
+import pandas as pd
+
+# Establish a connection to your SQL Server database
+conn_mssql = pymssql.connect(server='your_server_sql', user='your_user_sql', password='your_password_sql', database='your_database_sql')
+
+# Establish a connection to your MariaDB database
+conn_mariadb = mysql.connector.connect(user='your_user_mariadb', password='your_password_mariadb', host='your_server_mariadb', database='your_database_mariadb')
+
+# List of tables to check
+tables = ['table1', 'table2', 'table3']  # replace with your table names
+
+# For each table
+for table in tables:
+    print(f"Verifying data for table {table}")
+
+    # Get record count in both databases
+    query = f"SELECT COUNT(*) FROM {table}"
+    mariadb_count = pd.read_sql_query(query, conn_mariadb).values[0][0]
+    sql_count = pd.read_sql_query(query, conn_mssql).values[0][0]
+
+    # Compare record counts
+    if mariadb_count != sql_count:
+        print(f"Record count mismatch in table {table}: MariaDB has {mariadb_count}, SQL Server has {sql_count}")
+    else:
+        print(f"Record count matches in table {table}: {mariadb_count} records")
+
+    # Compare a few records (let's say 5) from both databases
+    query = f"SELECT * FROM {table} LIMIT 5"
+    mariadb_records = pd.read_sql_query(query, conn_mariadb)
+    sql_records = pd.read_sql_query(query, conn_mssql)
+
+    # Compare data
+    if not mariadb_records.equals(sql_records):
+        print(f"Data mismatch in table {table}")
+    else:
+        print(f"Sample data matches in table {table}")
+
+# Close the connections
+conn_mssql.close()
+conn_mariadb.close()
