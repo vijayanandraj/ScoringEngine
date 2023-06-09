@@ -61,3 +61,93 @@ def process_chunk(chunk):
 with ThreadPoolExecutor(max_workers=num_threads) as executor:
     chunks = pd.read_sql_query(query, mariadb_engine, chunksize=chunksize)
     executor.map(process_chunk, chunks)
+
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.dataformat.csv.*;
+import java.nio.file.*;
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        String rootDirectory = "./"; // replace with your root directory
+        String inputCsv = "./input.csv"; // replace with your input CSV
+        String outputCsv = "./output.csv"; // replace with your output CSV
+
+        Map<Path, String[]> projectMapping = new HashMap<>();
+        addOrphanedProjectsToMapping(rootDirectory, projectMapping);
+        updateCsvLog(inputCsv, outputCsv, projectMapping);
+    }
+
+    public static void addOrphanedProjectsToMapping(String rootDirectory, Map<Path, String[]> projectMapping) throws IOException {
+        Files.walk(Paths.get(rootDirectory))
+            .filter(path -> path.toString().endsWith(".csproj") || path.toString().endsWith(".vbproj"))
+            .forEach(projectPath -> {
+                try {
+                    if (!projectMapping.containsValue(projectPath)) {
+                        Files.walk(projectPath.getParent())
+                            .filter(srcPath -> srcPath.toString().endsWith(".cs") || srcPath.toString().endsWith(".vb"))
+                            .forEach(srcPath -> projectMapping.put(srcPath, new String[]{"Unknown", projectPath.toString()}));
+                    }
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            });
+    }
+
+    public static void updateCsvLog(String inputCsv, String outputCsv, Map<Path, String[]> projectMapping) throws IOException {
+        CsvMapper mapper = new CsvMapper();
+        CsvSchema schema = CsvSchema.emptySchema().withHeader();
+        ObjectReader oReader = mapper.readerFor(Map.class).with(schema);
+
+        List<Map<String,String>> allLines = oReader.<Map<String,String>>readValues(new File(inputCsv)).readAll();
+
+        CsvSchema outputSchema = schema.withColumn("filename").withColumn("solution_file").withColumn("project_file");
+        ObjectWriter oWriter = mapper.writer(outputSchema);
+
+        try (FileWriter outputWriter = new FileWriter(outputCsv)) {
+            for (Map<String,String> line : allLines) {
+                Path filePath = Paths.get(line.get("fullpath"));
+                String[] projectInfo = projectMapping.getOrDefault(filePath, new String[]{"Unknown", "Unknown"});
+                line.put("filename", line.get("filename"));
+                line.put("solution_file", projectInfo[0]);
+                line.put("project_file", projectInfo[1]);
+                oWriter.writeValue(outputWriter, line);
+            }
+        }
+    }
+}
+
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) {
+        String filePath = "path_to_your_csproj_file"; // replace with your .csproj file path
+        System.out.println(parseCsproj(filePath));
+    }
+
+    public static String parseCsproj(String filePath) {
+        try {
+            File inputFile = new File(filePath);
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(inputFile);
+            doc.getDocumentElement().normalize();
+
+            NodeList nList = doc.getElementsByTagName("AssemblyName");
+
+            if (nList.getLength() > 0) {
+                Node node = nList.item(0);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) node;
+                    return element.getTextContent();
+                }
+            }
+        } catch (Exception e) {
+            return "Error while parsing the csproj file: " + e.getMessage();
+        }
+        return "AssemblyName tag not found in the csproj file.";
+    }
+}
