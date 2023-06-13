@@ -236,7 +236,7 @@ import java.util.Map;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) {9
 
         String csvFilePath = "your_file.csv";
         List<Map<String, String>> rows = parseCSV(csvFilePath);
@@ -285,4 +285,15 @@ public class Main {
             return new ArrayList<>();
         }
     }
+}
+
+
+private File convertMultipartFileToFile(MultipartFile multipartFile) {
+    File file = new File(multipartFile.getOriginalFilename());
+    try (FileOutputStream fos = new FileOutputStream(file)) {
+        fos.write(multipartFile.getBytes());
+    } catch (IOException e) {
+        // handle exception
+    }
+    return file;
 }
