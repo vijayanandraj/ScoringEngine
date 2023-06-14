@@ -297,3 +297,38 @@ private File convertMultipartFileToFile(MultipartFile multipartFile) {
     }
     return file;
 }
+
+import java.nio.file.*;
+import java.io.IOException;
+import java.util.*;
+
+public class ProjectMapper {
+    public static void main(String[] args) throws IOException {
+        String rootPath = "/apps/iorginate";
+        Map<String, List<String>> projectMap = new HashMap<>();
+
+        addProjectsToMapping(rootPath, projectMap);
+        // Print the map to check the results
+        for (String key : projectMap.keySet()) {
+            System.out.println("Key: " + key + " Value: " + projectMap.get(key));
+        }
+    }
+
+    public static void addProjectsToMapping(String rootDirectory, Map<String, List<String>> projectMap) throws IOException {
+        Files.walk(Paths.get(rootDirectory))
+            .filter(path -> path.toString().endsWith(".csproj") || path.toString().endsWith(".vbproj"))
+            .forEach(projectPath -> {
+                try {
+                    Files.walk(projectPath.getParent())
+                        .filter(srcPath -> !Files.isDirectory(srcPath))  // Filter out directories
+                        .forEach(srcPath -> {
+                            List<String> value = Arrays.asList(projectPath.toString(), projectPath.getFileName().toString());
+                            projectMap.put(srcPath.toString(), value);
+                        });
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            });
+    }
+
+}
